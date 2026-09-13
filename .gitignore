@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Generated at runtime - never commit
+hotkey-launcher.ahk
+launcher.pid
+session-id.txt
+
+# User data - must NEVER be committed (history, settings, logs)
+history.json
+settings.json
+*.log
+*.log.old
+
+# Packaged builds
+dist/
+*.exe
+*.msi
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none';" />
+  <title>Translator</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="window" id="window" dir="ltr">
+    <header class="titlebar" id="drag-handle">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>TheDarkNeptune Translator</span>
+      </div>
+      <div class="title-actions">
+        <button class="icon-btn" id="history-btn" title="History">&#9776;</button>
+        <button class="icon-btn" id="settings-btn" title="Options">&#9881;</button>
+        <button class="icon-btn" id="minimize-btn" title="Minimize">&#8211;</button>
+        <button class="icon-btn close" id="close-btn" title="Hide (Esc)">&#215;</button>
+      </div>
+    </header>
+
+    <section class="panel history-panel" id="history-panel">
+      <div class="panel-head">
+        <span class="setting-title">Translation history</span>
+        <button class="ghost-btn small" id="clear-history-btn">Clear all</button>
+      </div>
+      <div class="history-list" id="history-list"></div>
+      <div class="history-empty" id="history-empty">No translations yet.</div>
+    </section>
+
+    <section class="panel settings-panel" id="settings-panel">
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Always on top</div>
+          <div class="setting-desc">Keep the window above all other windows</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-alwaysontop" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Run at startup</div>
+          <div class="setting-desc">Auto-start with Windows</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-runatstartup" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Auto-translate (Translate mode)</div>
+          <div class="setting-desc">Auto-translate while typing in translate mode</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-autotranslate" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Auto-translate (Rephrase mode)</div>
+          <div class="setting-desc">Auto-rephrase while typing in rephrase mode</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-autotranslate-rephrase" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Auto-copy result</div>
+          <div class="setting-desc">Copy the output to clipboard when finished</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-autocopy" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">External hotkey (works when closed)</div>
+          <div class="setting-desc">AutoHotkey holds your shortcut and opens the app</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt-externalhotkey" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="setting-title">Global hotkey</div>
+          <div class="setting-desc">Click, then press a new shortcut</div>
+        </div>
+        <button class="hotkey-field" id="hotkey-field" title="Change shortcut">Ctrl+Alt+T</button>
+      </div>
+      <div class="hotkey-err" id="hotkey-err"></div>
+    </section>
+
+    <main class="content">
+      <section class="card input-card">
+        <div class="mode-row">
+          <div class="mode-seg" id="mode-seg">
+            <button class="mode-btn active" data-mode="translate">Translate</button>
+            <button class="mode-btn" data-mode="rephrase">Rephrase</button>
+          </div>
+          <label class="rephrase-target hidden" id="rephrase-target" title="Output language">
+            <span>Output</span>
+            <select id="rephrase-lang">
+              <option value="auto">Same as input</option>
+              <option value="en">English</option>
+              <option value="ar">Arabic</option>
+            </select>
+          </label>
+        </div>
+        <div class="lang-row">
+          <div class="lang-pill" id="lang-pill">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <span class="arrow">&#8594;</span>
+            <button class="lang-btn" data-lang="ar">AR</button>
+          </div>
+          <span class="detected" id="detected-hint"></span>
+          <button class="ghost-btn" id="swap-btn" title="Swap languages">&#8646;</button>
+        </div>
+        <textarea id="input" rows="2" dir="auto"
+          placeholder="Type or paste text&hellip; then press Ctrl+Enter"></textarea>
+        <div class="input-actions">
+          <button class="ghost-btn" id="clear-btn" title="Clear">Clear</button>
+          <button class="primary-btn" id="translate-btn">
+            <span class="btn-label">Translate</span>
+            <span class="spinner" id="spinner"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="card result-card" id="result-card">
+        <div class="result-head">
+          <span class="result-lang" id="result-lang">Arabic</span>
+          <div class="result-actions">
+            <button class="ghost-btn" id="copy-btn" title="Copy">Copy</button>
+            <span class="copied" id="copied-tag">Copied</span>
+          </div>
+        </div>
+        <div class="result-text placeholder" id="result" dir="auto">
+          The translation will appear here.
+        </div>
+        <div class="error" id="error"></div>
+      </section>
+    </main>
+
+    <div class="quota-banner red" id="quota-banner">
+      <span id="quota-banner-text"></span>
+      <button class="banner-close" id="banner-close" title="Dismiss">&#215;</button>
+    </div>
+
+    <footer class="foot">
+      <span id="hint">Press <kbd id="hint-hotkey">Ctrl+Alt+T</kbd> anytime &bull; TheDarkNeptune via OpenCode Zen</span>
+      <span class="quota-tag" id="quota-tag"></span>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

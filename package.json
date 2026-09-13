@@ -1,0 +1,13 @@
+{
+  "name": "TheDarkNeptune-translator",
+  "version": "1.0.0",
+  "description": "Floating English <-> Arabic translator powered by TheDarkNeptune via OpenCode Zen",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^44.3.0"
+  }
+}
